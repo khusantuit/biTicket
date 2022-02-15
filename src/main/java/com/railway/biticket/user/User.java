@@ -38,6 +38,7 @@ public class User {
     @Column(name = "user_role")
     private UserRole userRole;
 
+    @NotNull
     @Column(name =  "password")
     private String password;
 }
