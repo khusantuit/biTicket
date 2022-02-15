@@ -1,9 +1,9 @@
 package com.railway.biticket.user.passanger;
 
+import com.railway.biticket.user.User;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -23,6 +23,10 @@ public class PassengerData {
     @Column(name = "id")
     private UUID id;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -41,8 +45,8 @@ public class PassengerData {
     @Column(name = "last_name")
     private String lastName;
 
-
     @NotNull
+    @Column(name = "middle_name")
     private String middleName;
 
     @NotNull
