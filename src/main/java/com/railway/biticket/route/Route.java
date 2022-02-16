@@ -33,5 +33,10 @@ public class Route {
             joinColumns = { @JoinColumn(name = "route_id") },
             inverseJoinColumns = { @JoinColumn(name = "station_id") }
     )
+
     Set<Station> stations = new HashSet<>();
+
+    public Set<Station> getStations() {
+        return stations;
+    }
 }

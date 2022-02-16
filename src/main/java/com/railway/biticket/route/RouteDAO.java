@@ -12,25 +12,14 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 public class RouteDAO {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id")
     private UUID id;
-
-    @NotBlank
-    @Column(name = "name")
     private String name;
-
-    @Column(name = "station_id", nullable = false)
-    private UUID stationId;
+    private List<UUID> stations;
 }

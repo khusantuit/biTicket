@@ -1,5 +1,6 @@
 package com.railway.biticket.station;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.railway.biticket.address.Address;
 import com.railway.biticket.route.Route;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class Station {
     @Column(name = "longitude", unique = true, nullable = false)
     private double longitude;
 
-    @ManyToMany(mappedBy = "stations")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "stations", cascade = CascadeType.ALL)
     private Set<Route> routes = new HashSet<>();
 }
