@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/station")
+@RequestMapping("/station")
 public class StationController {
 
     private final StationRepository stationRepository;
@@ -21,7 +21,7 @@ public class StationController {
         return stationRepository.findAll();
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public Station add(
             @RequestBody Station station
     ) {

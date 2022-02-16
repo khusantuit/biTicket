@@ -26,10 +26,10 @@ public class Address {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private Address region;
 
     @OneToMany(mappedBy = "region")
+    @ToString.Exclude
     private Set<Address> district = new HashSet<>();
-
-
 }

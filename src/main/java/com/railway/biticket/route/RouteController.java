@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
-@RequestMapping("/api/route")
+@RequestMapping("/route")
 public class RouteController {
     private  final RouteRepository routeRepository;
     private final RouteService routeService;
@@ -26,7 +26,7 @@ public class RouteController {
         return routeRepository.findAll();
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public Route add(@RequestBody RouteDAO body) {
         return routeService.add(body);
     }
