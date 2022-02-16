@@ -1,11 +1,13 @@
-package com.railway.biticket.station;
+package com.railway.biticket.route;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.railway.biticket.address.Address;
 import com.railway.biticket.route.Route;
+import com.railway.biticket.station.Station;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -15,8 +17,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Entity(name = "stations")
-public class Station {
+@ToString
+public class RouteDAO {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -29,16 +31,6 @@ public class Station {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
-
-    @Column(name = "latitude", unique = true, nullable = false)
-    private double latitude;
-
-    @Column(name = "longitude", unique = true, nullable = false)
-    private double longitude;
-
-    @ManyToMany(mappedBy = "stations")
-    private Set<Route> routes = new HashSet<>();
+    @Column(name = "station_id", nullable = false)
+    private UUID stationId;
 }
