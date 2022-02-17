@@ -14,6 +14,15 @@ import java.util.UUID;
 @Entity
 public class Wagon {
 
+    public Wagon() {
+    }
+
+    public Wagon(WagonType type, short capacity, String number) {
+        this.type = type;
+        this.capacity = capacity;
+        this.number = number;
+    }
+
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -35,6 +44,7 @@ public class Wagon {
 
 
     @NotBlank
-    @Column(name = "number")
+    @Column(name = "number", unique = true)
     private String number;
+
 }
