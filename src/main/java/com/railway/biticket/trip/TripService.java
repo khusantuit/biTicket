@@ -1,20 +1,21 @@
 package com.railway.biticket.trip;
 
-import com.railway.biticket.Response;
+import com.railway.biticket.common.response.Response;
 import com.railway.biticket.station.Station;
 import com.railway.biticket.station.StationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.net.http.HttpResponse;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
+@RequiredArgsConstructor
 @Service
 public class TripService {
     private final String LESS_THAN_TWO_STATIONS = "Less than two stations installed";
@@ -24,12 +25,6 @@ public class TripService {
     private final StationRepository stationRepository;
     private final TripRepository tripRepository;
 
-
-    @Autowired
-    public TripService(StationRepository stationRepository, TripRepository tripRepository) {
-        this.stationRepository = stationRepository;
-        this.tripRepository = tripRepository;
-    }
 
     public Trip addStation(UUID tripId, UUID stationId) {
         Optional<Station> station = stationRepository.findById(stationId);
@@ -48,7 +43,7 @@ public class TripService {
         return trip.get();
     }
 
-    public ResponseEntity<Object> add(TripDTO body) {
+    public ResponseEntity<?> add(TripDTO body) {
         Set<Station> stationSet = null;
         AtomicInteger count = new AtomicInteger(0);
         try {

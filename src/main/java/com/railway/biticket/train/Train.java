@@ -1,5 +1,6 @@
 package com.railway.biticket.train;
 
+import com.railway.biticket.coach.Coach;
 import com.railway.biticket.seat.Seat;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,6 @@ public class Train {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "coach")
-    private List<Seat> coaches = new ArrayList<Seat>();
+    @OneToMany(mappedBy = "train", cascade = CascadeType.ALL)
+    private List<Coach> coaches = new ArrayList<>();
 }

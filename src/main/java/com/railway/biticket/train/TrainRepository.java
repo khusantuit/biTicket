@@ -7,4 +7,5 @@ import java.util.UUID;
 
 @Repository
 public interface TrainRepository extends JpaRepository<Train, UUID> {
+    boolean existsByNameIgnoreCase(String name);
 }

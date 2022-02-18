@@ -1,30 +1,33 @@
 package com.railway.biticket.train;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.railway.biticket.common.response.Response;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/train")
 public class TrainController {
 
-    private final TrainRepository trainRepository;
-
-    @Autowired
-    public TrainController(TrainRepository trainRepository) {
-        this.trainRepository = trainRepository;
-    }
+    private final TrainService trainService;
 
     @GetMapping("/list")
-    public List<Train> getList() {
-        return trainRepository.findAll();
+    public Response<?> getList() {
+        return trainService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public Response<?> get(@PathVariable UUID id) {
+        return trainService.get(id);
     }
 
     @PostMapping
-    public Train add(
-            @RequestBody Train train
-    ) {
-        return trainRepository.save(train);
+    public Response<?> add(@RequestBody @Valid Train train) {
+        return trainService.create(train);
     }
+
 }
