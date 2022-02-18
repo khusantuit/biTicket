@@ -30,9 +30,10 @@ public class Trip {
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "trip_station",
-            joinColumns = { @JoinColumn(name = "trip_id") },
+            joinColumns = { @JoinColumn(name = "trip_id")},
             inverseJoinColumns = { @JoinColumn(name = "station_id") }
     )
+
 
     Set<Station> stations = new HashSet<>();
 
