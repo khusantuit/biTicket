@@ -2,11 +2,10 @@ package com.railway.biticket.station;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.railway.biticket.address.Address;
-import com.railway.biticket.route.Route;
+import com.railway.biticket.trip.Trip;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -16,7 +15,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Entity(name = "stations")
+@Entity
+@Table(name = "stations")
 public class Station {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -34,13 +34,13 @@ public class Station {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @Column(name = "latitude", unique = true, nullable = false)
-    private double latitude;
+    @Column(name = "latitude", unique = true)
+    private Double latitude;
 
-    @Column(name = "longitude", unique = true, nullable = false)
-    private double longitude;
+    @Column(name = "longitude", unique = true)
+    private Double longitude;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "stations", cascade = CascadeType.ALL)
-    private Set<Route> routes = new HashSet<>();
+    private Set<Trip> routes = new HashSet<>();
 }

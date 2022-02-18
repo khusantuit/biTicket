@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController()
-@RequestMapping("api/address")
+@RequestMapping("/address")
 public class AddressController {
     private final AddressRepository addressRepository;
 
@@ -20,7 +20,7 @@ public class AddressController {
         return addressRepository.findAll();
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public Address add(
             @RequestBody Address address
     ) {

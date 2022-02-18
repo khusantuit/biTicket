@@ -22,22 +22,23 @@ public class User {
     private UUID id;
 
     @NotBlank
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @NotBlank
-    @Column(name = "email", unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @NotBlank
-    @Column(name = "phone_number", unique = true)
+    @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "user_role")
+    @Column(name = "user_role", nullable = false)
     private UserRole userRole;
 
-    @Column(name =  "password")
+    @NotNull
+    @Column(name =  "password", nullable = false)
     private String password;
 }

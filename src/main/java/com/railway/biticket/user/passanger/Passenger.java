@@ -3,6 +3,8 @@ package com.railway.biticket.user.passanger;
 import com.railway.biticket.user.User;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,8 +15,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Entity(name = "passenger_data")
-public class PassengerData {
+@Entity
+@Table(name = "passenger")
+public class Passenger {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -25,35 +28,39 @@ public class PassengerData {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "document_type")
+    @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 
     @NotBlank
-    @Column(name = "document_serial_number")
+    @Column(name = "document_serial_number", nullable = false)
     private String documentSerialNumber;
 
     @NotBlank
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @NotNull
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @NotNull
-    @Column(name = "middle_name")
+    @Column(name = "middle_name", nullable = false)
     private String middleName;
 
     @NotNull
-    @Column(name = "issue_date")
+    @Column(name = "issue_date", nullable = false)
     private LocalDate dateOfIssue;
 
     @NotNull
-    @Column(name = "expire_date")
+    @Column(name = "expire_date", nullable = false)
     private LocalDate dateOfExpire;
+
+    @NotNull
+    @Column(name = "state", nullable = false, columnDefinition = "int default 1")
+    private int state;
 }

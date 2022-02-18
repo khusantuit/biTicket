@@ -32,4 +32,10 @@ public class Address {
     @OneToMany(mappedBy = "region")
     @ToString.Exclude
     private Set<Address> district = new HashSet<>();
+
+    @Column(name = "latitude", unique = true, nullable = false)
+    private double latitude;
+
+    @Column(name = "longitude", unique = true, nullable = false)
+    private double longitude;
 }

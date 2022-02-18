@@ -1,7 +1,6 @@
-package com.railway.biticket.route;
+package com.railway.biticket.trip;
 
 import com.railway.biticket.station.Station;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -14,8 +13,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Entity(name = "routes")
-public class Route {
+@Entity(name = "trips")
+public class Trip {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -25,12 +24,13 @@ public class Route {
     private UUID id;
 
     @NotBlank
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "route_station",
-            joinColumns = { @JoinColumn(name = "route_id") },
+            name = "trip_station",
+            joinColumns = { @JoinColumn(name = "trip_id") },
             inverseJoinColumns = { @JoinColumn(name = "station_id") }
     )
 
