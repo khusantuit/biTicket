@@ -28,5 +28,5 @@ public class Train {
     private String name;
 
     @OneToMany(mappedBy = "coach")
-    private List<Seat> items = new ArrayList<Seat>();
+    private List<Seat> coaches = new ArrayList<Seat>();
 }

@@ -27,6 +27,6 @@ public class Seat {
     private Integer seatNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_coach_id")
+    @JoinColumn(name = "coach_id")
     private Coach coach;
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Entity(name = "coachs")
+@Entity(name = "coaches")
 public class Coach {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -29,9 +29,9 @@ public class Coach {
     private String name;
 
     @OneToMany(mappedBy = "coach")
-    private List<Seat> items = new ArrayList<Seat>();
+    private List<Seat> seats = new ArrayList<Seat>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fk_train_id")
+    @JoinColumn(name = "train_id")
     private Train train;
 }
