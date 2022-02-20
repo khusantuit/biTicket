@@ -1,59 +1,65 @@
-package com.railway.biticket.train;
+package com.railway.biticket.seat;
 
+import com.railway.biticket.coach.Coach;
+import com.railway.biticket.coach.CoachDTO;
 import com.railway.biticket.coach.CoachRepository;
 import com.railway.biticket.common.Message;
+import com.railway.biticket.common.exception.ConflictException;
 import com.railway.biticket.common.exception.NotFoundException;
 import com.railway.biticket.common.response.Response;
-import com.railway.biticket.common.exception.ConflictException;
-import com.railway.biticket.seat.Seat;
-import com.railway.biticket.seat.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-
-@RequiredArgsConstructor
 @Service
-public class TrainService implements Message {
-    private final TrainRepository trainRepository;
-    private final CoachRepository coachRepository;
+@RequiredArgsConstructor
+public class SeatService implements Message {
     private final SeatRepository seatRepository;
+    private final CoachRepository coachRepository;
 
-    public Response<?> create(Train train) {
-        if (trainRepository.existsByNameIgnoreCase(train.getName()))
+    public Response<?> create(SeatDTO seatDTO) {
+        if(seatRepository.existsBySeatNum(seatDTO.getSeatNum()))
             throw new ConflictException(
                     NAME_CONFLICT_MSG,
-                    Train.class,
-                    "name");
+                    Seat.class,
+                    "seat_num"
+            );
 
-        Train createdTrain = trainRepository.save(train);
+        Coach coach = coachRepository.findById(seatDTO.getCoachId()).orElseThrow(()-> new NotFoundException(NOT_FOUND_COACH, Coach.class));
+
+        Seat seat = Seat.builder()
+                .seatNum(seatDTO.getSeatNum())
+                .coach(coach)
+                .build();
+
+        Seat saved = seatRepository.save(seat);
 
         return Response.builder()
-                .message(HttpStatus.CREATED.getReasonPhrase())
                 .statusCode(HttpStatus.CREATED.value())
-                .data(createdTrain.getId())
+                .message(HttpStatus.CREATED.getReasonPhrase())
+                .data(saved.getId())
                 .build();
     }
 
     public Response<?> get(UUID id) {
-        Train train = trainRepository.findById(id)
+        Seat seat = seatRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(
-                                NOT_FOUND_TRAIN,
-                                Train.class));
+                                NOT_FOUND_SEAT,
+                                Seat.class));
+
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
-                .data(train)
+                .data(seat)
                 .build();
     }
 
     public Response<?> getAll() {
-        List<Train> all = trainRepository.findAll();
+        List<Seat> all = seatRepository.findAll();
 
         if (all.size() == 0)
             return Response.builder()
@@ -67,45 +73,41 @@ public class TrainService implements Message {
                 .statusCode(HttpStatus.FOUND.value())
                 .data(all)
                 .build();
-
     }
 
     public Response<?> updateById(
             UUID id,
-            TrainDTO trainDTO
+            SeatDTO seatDTO
     ) {
-        Train train = trainRepository.findById(id)
+        Seat seat = seatRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(
-                                NOT_FOUND_TRAIN,
-                                Train.class));
+                                NOT_FOUND_SEAT,
+                                Seat.class));
 
-        if(!train.getName().equals(trainDTO.getName())) {
-            train.setName(trainDTO.getName());
+        if(seat.getSeatNum() != seatDTO.getSeatNum()) {
+            seat.setSeatNum(seatDTO.getSeatNum());
 
-            trainRepository.save(train);
+            seatRepository.save(seat);
         }
 
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
-                .data(train)
+                .data(seat)
                 .build();
     }
 
     public Response<?> deleteById(
-            UUID trainId
+            UUID seatId
     ) {
-        Train train = trainRepository.findById(trainId)
+        Seat seat = seatRepository.findById(seatId)
                 .orElseThrow(() ->
                         new NotFoundException(
-                                NOT_FOUND_TRAIN,
-                                Train.class));
-        //TODO checking method details
+                                NOT_FOUND_SEAT,
+                                Seat.class));
 
-        coachRepository.deleteCoachesByTrainId(trainId);
-
-        trainRepository.delete(train);
+        seatRepository.delete(seat);
 
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
