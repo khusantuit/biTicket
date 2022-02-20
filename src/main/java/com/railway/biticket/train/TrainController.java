@@ -30,4 +30,11 @@ public class TrainController {
         return trainService.create(train);
     }
 
+    @PutMapping("/{id}")
+    public Response<?> update(
+            @PathVariable UUID id,
+            @RequestBody TrainDTO trainDTO
+    ) {
+        return trainService.updateById(id, trainDTO);
+    }
 }

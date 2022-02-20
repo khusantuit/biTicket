@@ -7,4 +7,5 @@ import java.util.UUID;
 
 @Repository
 public interface CoachRepository extends JpaRepository<Coach, UUID> {
+    boolean existsByNameIgnoreCase(String name);
 }

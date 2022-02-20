@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -17,19 +18,6 @@ import java.util.UUID;
 @Service
 public class TrainService implements Message {
     private final TrainRepository trainRepository;
-
-    public Response<?> get(UUID id) {
-        Train train = trainRepository.findById(id)
-                .orElseThrow(() ->
-                        new NotFoundException(
-                                NOT_FOUND_TRAIN,
-                                Train.class));
-        return Response.builder()
-                .message(HttpStatus.OK.getReasonPhrase())
-                .statusCode(HttpStatus.OK.value())
-                .data(train)
-                .build();
-    }
 
     public Response<?> create(Train train) {
         if (trainRepository.existsByNameIgnoreCase(train.getName()))
@@ -46,6 +34,19 @@ public class TrainService implements Message {
                 .build();
     }
 
+    public Response<?> get(UUID id) {
+        Train train = trainRepository.findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                NOT_FOUND_TRAIN,
+                                Train.class));
+        return Response.builder()
+                .message(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .data(train)
+                .build();
+    }
+
     public Response<?> getAll() {
         List<Train> all = trainRepository.findAll();
 
@@ -58,9 +59,32 @@ public class TrainService implements Message {
 
         return Response.builder()
                 .message(HttpStatus.FOUND.getReasonPhrase())
-                .statusCode(HttpStatus.NO_CONTENT.value())
+                .statusCode(HttpStatus.FOUND.value())
                 .data(all)
                 .build();
 
+    }
+
+    public Response<?> updateById(
+            UUID id,
+            TrainDTO trainDTO
+    ) {
+        Train train = trainRepository.findById(id)
+                .orElseThrow(() ->
+                        new NotFoundException(
+                                NOT_FOUND_TRAIN,
+                                Train.class));
+
+        if(!train.getName().equals(trainDTO.getName())) {
+            train.setName(trainDTO.getName());
+
+            trainRepository.save(train);
+        }
+
+        return Response.builder()
+                .message(HttpStatus.OK.getReasonPhrase())
+                .statusCode(HttpStatus.OK.value())
+                .data(train)
+                .build();
     }
 }

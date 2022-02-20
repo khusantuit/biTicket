@@ -3,8 +3,7 @@ package com.railway.biticket.coach;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.railway.biticket.seat.Seat;
 import com.railway.biticket.train.Train;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,6 +14,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity(name = "coaches")
 public class Coach {
     @Id
@@ -36,4 +38,5 @@ public class Coach {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "train_id")
     private Train train;
+
 }

@@ -12,5 +12,4 @@ public class ConflictException extends RuntimeException{
         this.type = type;
         this.field = field;
     }
-
 }
