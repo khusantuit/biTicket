@@ -17,17 +17,17 @@ public class TrainController {
 
     @GetMapping("/list")
     public ResponseEntity<Response<?>> getList() {
-        return ResponseEntity.ok().body(trainService.getAll());
+        return trainService.getAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Response<?>> get(@PathVariable UUID id) {
-        return ResponseEntity.ok(trainService.get(id));
+        return trainService.get(id);
     }
 
     @PostMapping
     public ResponseEntity<Response<?>> add(@RequestBody @Valid Train train) {
-        return ResponseEntity.ok().body(trainService.create(train));
+        return trainService.create(train);
     }
 
     @PutMapping("/{id}")
@@ -35,11 +35,11 @@ public class TrainController {
             @PathVariable UUID id,
             @RequestBody TrainDTO trainDTO
     ) {
-        return ResponseEntity.ok().body(trainService.updateById(id, trainDTO));
+        return trainService.updateById(id, trainDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<?>> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok().body(trainService.deleteById(id));
+        return trainService.deleteById(id);
     }
 }

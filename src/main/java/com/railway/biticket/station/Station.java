@@ -3,8 +3,7 @@ package com.railway.biticket.station;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.railway.biticket.address.Address;
 import com.railway.biticket.trip.Trip;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,6 +14,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "stations")
 public class Station {

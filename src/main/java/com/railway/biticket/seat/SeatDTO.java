@@ -8,7 +8,7 @@ import java.util.UUID;
 @Getter
 public class SeatDTO {
     @JsonProperty(value = "seat_num")
-    private int seatNum;
+    private Integer seatNum;
     @JsonProperty(value = "coach_id")
     private UUID coachId;
 }

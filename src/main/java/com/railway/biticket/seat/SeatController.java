@@ -20,26 +20,33 @@ public class SeatController {
 
     @GetMapping("/list")
     public ResponseEntity<Response<?>> getList() {
-        return ResponseEntity.ok().body(seatService.getAll());
+        return seatService.getAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Response<?>> get(
             @PathVariable UUID id) {
-        return ResponseEntity.ok().body(seatService.get(id));
+        return seatService.get(id);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Response<?>> update(
             @PathVariable UUID id,
             @RequestBody SeatDTO seatDTO) {
-        return ResponseEntity.ok().body(seatService.updateById(id, seatDTO));
+        return seatService.updateById(id, seatDTO);
     }
 
     @PostMapping
     public ResponseEntity<Response<?>> add(
             @RequestBody SeatDTO seatDTO
     ) {
-        return ResponseEntity.ok().body(seatService.create(seatDTO));
+        return seatService.create(seatDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Response<?>> delete(
+            @PathVariable UUID id
+    ) {
+        return seatService.deleteById(id);
     }
 }

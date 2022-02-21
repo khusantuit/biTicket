@@ -32,7 +32,9 @@ public class Seat {
     private int seatNum;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "coach_id")
     private Coach coach;
+
+
 }

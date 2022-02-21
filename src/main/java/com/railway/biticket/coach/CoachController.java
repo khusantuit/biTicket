@@ -6,9 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -19,22 +16,21 @@ public class CoachController {
 
     @GetMapping("/list")
     public ResponseEntity<Response<?>> getList() {
-        return ResponseEntity.ok()
-                .body(coachService.getAll());
+        return coachService.getAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Response<?>> get(@PathVariable UUID id) {
-        return ResponseEntity.ok().body(coachService.get(id));
+        return coachService.get(id);
     }
 
     @PostMapping
     public ResponseEntity<Response<?>> add(@RequestBody CoachDTO coachDTO) {
-        return ResponseEntity.ok().body(coachService.create(coachDTO));
+        return coachService.create(coachDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<?>> delete(@PathVariable UUID id) {
-        return ResponseEntity.ok().body(coachService.deleteById(id));
+        return coachService.deleteById(id);
     }
 }

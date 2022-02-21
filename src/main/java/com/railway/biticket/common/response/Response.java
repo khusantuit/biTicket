@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver;
 
 import javax.validation.constraints.NotNull;
@@ -12,10 +14,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @JsonPropertyOrder({"message", "status","data"})
-public class Response<T>{
+public class Response<T> {
     @JsonProperty(value = "message")
     private String message;
 
@@ -26,8 +26,7 @@ public class Response<T>{
     @JsonProperty(value = "data")
     private T data;
 
-    public Response(String message, Integer statusCode) {
-        this.message = message;
-        this.statusCode = statusCode;
+    public ResponseEntity<Response<?>> makeResponseEntity() {
+        return new ResponseEntity<>(this, HttpStatus.valueOf(this.statusCode));
     }
 }

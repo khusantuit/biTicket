@@ -1,5 +1,6 @@
 package com.railway.biticket.coach;
 
+import com.railway.biticket.common.BaseService;
 import com.railway.biticket.common.Message;
 import com.railway.biticket.common.exception.ConflictException;
 import com.railway.biticket.common.exception.NotFoundException;
@@ -9,6 +10,7 @@ import com.railway.biticket.train.TrainDTO;
 import com.railway.biticket.train.TrainRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +19,19 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class CoachService implements Message {
+public class CoachService implements BaseService, Message {
     private final CoachRepository coachRepository;
     private final TrainRepository trainRepository;
 
-   public Response<?> create(CoachDTO coachDTO) {
+   public ResponseEntity<Response<?>> create(CoachDTO coachDTO) {
+       if(isEmpty(coachDTO.getName(), coachDTO.getTrainId())) {
+           return Response.builder()
+                   .message(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                   .statusCode(HttpStatus.BAD_REQUEST.value())
+                   .data(coachDTO)
+                   .build().makeResponseEntity();
+       }
+
        if(coachRepository.existsByNameIgnoreCase(coachDTO.getName()))
            throw new ConflictException(
                NAME_CONFLICT_MSG,
@@ -36,16 +46,26 @@ public class CoachService implements Message {
            .train(train)
            .build();
 
-       Coach saved = coachRepository.save(coach);
+       Coach saved = null;
+       try {
+           saved = coachRepository.save(coach);
+       } catch (Exception e) {
+           e.printStackTrace();
+           throw new ConflictException(
+                   HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                   Coach.class,
+                   "name"
+           );
+       }
 
        return Response.builder()
            .statusCode(HttpStatus.CREATED.value())
            .message(HttpStatus.CREATED.getReasonPhrase())
            .data(saved.getId())
-           .build();
+           .build().makeResponseEntity();
    }
 
-    public Response<?> get(UUID id) {
+    public ResponseEntity<Response<?>> get(UUID id) {
         Coach coach = coachRepository.findById(id)
             .orElseThrow(() ->
                 new NotFoundException(
@@ -56,10 +76,10 @@ public class CoachService implements Message {
             .message(HttpStatus.OK.getReasonPhrase())
             .statusCode(HttpStatus.OK.value())
             .data(coach)
-            .build();
+            .build().makeResponseEntity();
     }
 
-    public Response<?> getAll() {
+    public ResponseEntity<Response<?>> getAll() {
         List<Coach> all = coachRepository.findAll();
 
         if (all.size() == 0)
@@ -67,16 +87,16 @@ public class CoachService implements Message {
                 .message(HttpStatus.NO_CONTENT.getReasonPhrase())
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .data(all)
-                .build();
+                .build().makeResponseEntity();
 
         return Response.builder()
             .message(HttpStatus.FOUND.getReasonPhrase())
             .statusCode(HttpStatus.FOUND.value())
             .data(all)
-            .build();
+            .build().makeResponseEntity();
     }
 
-    public Response<?> updateById(
+    public ResponseEntity<Response<?>> updateById(
             UUID id,
             CoachDTO coachDTO
     ) {
@@ -96,10 +116,10 @@ public class CoachService implements Message {
             .message(HttpStatus.OK.getReasonPhrase())
             .statusCode(HttpStatus.OK.value())
             .data(coach)
-            .build();
+            .build().makeResponseEntity();
     }
 
-    public Response<?> deleteById(
+    public ResponseEntity<Response<?>> deleteById(
             UUID coachId
     ) {
         Coach coach = coachRepository.findById(coachId)
@@ -113,7 +133,7 @@ public class CoachService implements Message {
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
-                .build();
+                .build().makeResponseEntity();
     }
 
 }

@@ -1,49 +1,56 @@
-package com.railway.biticket.station;
+package com.railway.biticket.address;
 
-import com.railway.biticket.address.Address;
-import com.railway.biticket.address.AddressRepository;
 import com.railway.biticket.common.BaseService;
 import com.railway.biticket.common.Message;
 import com.railway.biticket.common.exception.ConflictException;
 import com.railway.biticket.common.exception.NotFoundException;
 import com.railway.biticket.common.response.Response;
+import com.railway.biticket.seat.Seat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Service
-public class StationService implements BaseService, Message {
-    private final StationRepository stationRepository;
+@RequiredArgsConstructor
+public class AddressService implements BaseService, Message {
     private final AddressRepository addressRepository;
 
-    public ResponseEntity<Response<?>> create(StationDTO stationDTO) {
-        if(isEmpty(stationDTO.getName(), stationDTO.getAddressId()))
+    public ResponseEntity<Response<?>> create(AddressDTO addressDTO) {
+        if(isEmpty(addressDTO.getName()))
             return Response.builder()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                    .data(stationDTO)
+                    .data(addressDTO)
                     .build().makeResponseEntity();
 
-        if(stationRepository.existsByName(stationDTO.getName()))
+        if(addressRepository.existsByName(addressDTO.getName()))
             throw new ConflictException(
                     NAME_CONFLICT_MSG,
-                    Station.class,
+                    Address.class,
                     "name"
             );
 
-        Address address = addressRepository.findById(stationDTO.getAddressId()).orElseThrow(()-> new NotFoundException(NOT_FOUND_STATION, Address.class));
-
-        Station station = Station.builder()
-                .name(stationDTO.getName())
-                .address(address)
+        Address address = Address.builder()
+                .name(addressDTO.getName())
                 .build();
 
-        Station saved = stationRepository.save(station);
+        if(addressDTO.getLatitude() != null && addressDTO.getLongitude() != null) {
+            address.setLatitude(addressDTO.getLatitude());
+            address.setLongitude(addressDTO.getLongitude());
+        }
+
+        if(addressDTO.getParentId() != null) {
+            Optional<Address> parentAddress = addressRepository.findById(addressDTO.getParentId());
+
+            parentAddress.ifPresent(address::setAddress);
+        }
+
+        Address saved = addressRepository.save(address);
 
         return Response.builder()
                 .statusCode(HttpStatus.CREATED.value())
@@ -54,21 +61,21 @@ public class StationService implements BaseService, Message {
 
     public ResponseEntity<Response<?>> get(UUID id) {
 
-        Station station = stationRepository.findById(id)
+        Address address = addressRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(
-                                NOT_FOUND_STATION,
-                                Station.class));
+                                NOT_FOUND_ADDRESS,
+                                Seat.class));
 
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
-                .data(station)
+                .data(address)
                 .build().makeResponseEntity();
     }
 
     public ResponseEntity<Response<?>> getAll() {
-        List<Station> all = stationRepository.findAll();
+        List<Address> all = addressRepository.findAll();
 
         if (all.size() == 0)
             return Response.builder()
@@ -86,49 +93,48 @@ public class StationService implements BaseService, Message {
 
     public ResponseEntity<Response<?>> updateById(
             UUID id,
-            StationDTO stationDTO
+            AddressDTO addressDTO
     ) {
-        if(isEmpty(stationDTO.getName(), stationDTO.getAddressId()))
+        if(isEmpty(addressDTO.getName()))
             return Response.builder()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                    .data(stationDTO)
+                    .data(addressDTO)
                     .build().makeResponseEntity();
 
-        Station station = stationRepository.findById(id)
+        Address address = addressRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(
-                                NOT_FOUND_STATION,
-                                Station.class));
+                                NOT_FOUND_ADDRESS,
+                                Address.class));
 
-        if(!station.getName().equals(stationDTO.getName())) {
-            station.setName(stationDTO.getName());
+        if(!address.getName().equals(addressDTO.getName())) {
+            address.setName(addressDTO.getName());
 
-            stationRepository.save(station);
+            addressRepository.save(address);
         }
 
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
-                .data(station)
+                .data(address)
                 .build().makeResponseEntity();
     }
 
     public ResponseEntity<Response<?>> deleteById(
-            UUID stationId
+            UUID addressId
     ) {
-        Station station = stationRepository.findById(stationId)
+        Address address = addressRepository.findById(addressId)
                 .orElseThrow(() ->
                         new NotFoundException(
-                                NOT_FOUND_STATION,
-                                Station.class));
+                                NOT_FOUND_ADDRESS,
+                                Address.class));
 
-        stationRepository.delete(station);
+        addressRepository.delete(address);
 
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
                 .build().makeResponseEntity();
     }
-
 }

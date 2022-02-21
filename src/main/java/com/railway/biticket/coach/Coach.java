@@ -35,7 +35,7 @@ public class Coach {
     private List<Seat> seats = new ArrayList<Seat>();
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "train_id")
     private Train train;
 

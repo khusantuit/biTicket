@@ -1,14 +1,15 @@
 package com.railway.biticket.seat;
 
 import com.railway.biticket.coach.Coach;
-import com.railway.biticket.coach.CoachDTO;
 import com.railway.biticket.coach.CoachRepository;
+import com.railway.biticket.common.BaseService;
 import com.railway.biticket.common.Message;
 import com.railway.biticket.common.exception.ConflictException;
 import com.railway.biticket.common.exception.NotFoundException;
 import com.railway.biticket.common.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +17,18 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class SeatService implements Message {
+public class SeatService implements BaseService, Message {
     private final SeatRepository seatRepository;
     private final CoachRepository coachRepository;
 
-    public Response<?> create(SeatDTO seatDTO) {
+    public ResponseEntity<Response<?>> create(SeatDTO seatDTO) {
+        if(isEmpty(seatDTO.getSeatNum(), seatDTO.getCoachId()))
+            return Response.builder()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                    .data(seatDTO)
+                    .build().makeResponseEntity();
+
         if(seatRepository.existsBySeatNum(seatDTO.getSeatNum()))
             throw new ConflictException(
                     NAME_CONFLICT_MSG,
@@ -41,10 +49,11 @@ public class SeatService implements Message {
                 .statusCode(HttpStatus.CREATED.value())
                 .message(HttpStatus.CREATED.getReasonPhrase())
                 .data(saved.getId())
-                .build();
+                .build().makeResponseEntity();
     }
 
-    public Response<?> get(UUID id) {
+    public ResponseEntity<Response<?>> get(UUID id) {
+
         Seat seat = seatRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(
@@ -55,10 +64,10 @@ public class SeatService implements Message {
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
                 .data(seat)
-                .build();
+                .build().makeResponseEntity();
     }
 
-    public Response<?> getAll() {
+    public ResponseEntity<Response<?>> getAll() {
         List<Seat> all = seatRepository.findAll();
 
         if (all.size() == 0)
@@ -66,19 +75,26 @@ public class SeatService implements Message {
                     .message(HttpStatus.NO_CONTENT.getReasonPhrase())
                     .statusCode(HttpStatus.NO_CONTENT.value())
                     .data(all)
-                    .build();
+                    .build().makeResponseEntity();
 
         return Response.builder()
                 .message(HttpStatus.FOUND.getReasonPhrase())
                 .statusCode(HttpStatus.FOUND.value())
                 .data(all)
-                .build();
+                .build().makeResponseEntity();
     }
 
-    public Response<?> updateById(
+    public ResponseEntity<Response<?>> updateById(
             UUID id,
             SeatDTO seatDTO
     ) {
+        if(isEmpty(seatDTO.getSeatNum(), seatDTO.getCoachId()))
+            return Response.builder()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                    .data(seatDTO)
+                    .build().makeResponseEntity();
+
         Seat seat = seatRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(
@@ -95,10 +111,10 @@ public class SeatService implements Message {
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
                 .data(seat)
-                .build();
+                .build().makeResponseEntity();
     }
 
-    public Response<?> deleteById(
+    public ResponseEntity<Response<?>> deleteById(
             UUID seatId
     ) {
         Seat seat = seatRepository.findById(seatId)
@@ -112,6 +128,6 @@ public class SeatService implements Message {
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
                 .statusCode(HttpStatus.OK.value())
-                .build();
+                .build().makeResponseEntity();
     }
 }

@@ -27,13 +27,12 @@ public class Trip {
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "trip_station",
             joinColumns = { @JoinColumn(name = "trip_id")},
             inverseJoinColumns = { @JoinColumn(name = "station_id") }
     )
-
 
     Set<Station> stations = new HashSet<>();
 

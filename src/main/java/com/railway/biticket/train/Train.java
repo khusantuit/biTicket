@@ -2,6 +2,7 @@ package com.railway.biticket.train;
 
 import com.railway.biticket.coach.Coach;
 import com.railway.biticket.seat.Seat;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
 @Entity(name = "trains")
 public class Train {
     @Id

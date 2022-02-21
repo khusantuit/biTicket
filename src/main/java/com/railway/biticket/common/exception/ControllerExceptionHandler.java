@@ -8,28 +8,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
-
     @ExceptionHandler( {NotFoundException.class})
     ResponseEntity<Response<?>> notFoundHandler(Exception e) {
-        return getResponseEntity(Response.builder()
+        return Response.builder()
                 .message(e.getMessage())
                 .statusCode(HttpStatus.NOT_FOUND.value())
-                .build(), e);
+                .build().makeResponseEntity();
     }
 
     @ExceptionHandler({ConflictException.class})
     ResponseEntity<Response<?>> conflictHandler(Exception e) {
-        return getResponseEntity(Response.builder()
+        return Response.builder()
                 .message(e.getMessage())
                 .statusCode(HttpStatus.CONFLICT.value())
-                .build(), e);
+                .build().makeResponseEntity();
     }
-
-    private ResponseEntity<Response<?>> getResponseEntity(
-            Response<?> res,
-            Exception e
-    ) {
-        return new ResponseEntity<>(res, HttpStatus.valueOf(res.getStatusCode()));
-    }
-
 }

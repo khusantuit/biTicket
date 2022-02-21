@@ -17,6 +17,4 @@ public class TrainDTO {
     private UUID id;
 
     private String name;
-
-    private List<UUID> coaches = new ArrayList<>();
 }
