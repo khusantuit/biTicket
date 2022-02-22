@@ -22,7 +22,7 @@ public class StationService implements BaseService, Message {
     private final AddressRepository addressRepository;
 
     public ResponseEntity<Response<?>> create(StationDTO stationDTO) {
-        if(isEmpty(stationDTO.getName(), stationDTO.getAddressId()))
+        if(isEmpty(stationDTO.getName()))
             return Response.builder()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.getReasonPhrase())
@@ -36,11 +36,13 @@ public class StationService implements BaseService, Message {
                     "name"
             );
 
-        Address address = addressRepository.findById(stationDTO.getAddressId()).orElseThrow(()-> new NotFoundException(NOT_FOUND_STATION, Address.class));
+        Address region = addressRepository.findById(stationDTO.getRegionId()).orElseThrow(()-> new NotFoundException(NOT_FOUND_ADDRESS, Address.class));
+        Address district = addressRepository.findById(stationDTO.getDistrictId()).orElseThrow(()-> new NotFoundException(NOT_FOUND_ADDRESS, Address.class));
 
         Station station = Station.builder()
                 .name(stationDTO.getName())
-                .address(address)
+                .region(region)
+                .district(district)
                 .build();
 
         Station saved = stationRepository.save(station);
@@ -88,7 +90,7 @@ public class StationService implements BaseService, Message {
             UUID id,
             StationDTO stationDTO
     ) {
-        if(isEmpty(stationDTO.getName(), stationDTO.getAddressId()))
+        if(isEmpty(stationDTO.getName()))
             return Response.builder()
                     .statusCode(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.getReasonPhrase())

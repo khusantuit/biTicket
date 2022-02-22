@@ -11,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +35,7 @@ public class AddressService implements BaseService, Message {
 
         Address address = Address.builder()
                 .name(addressDTO.getName())
+                .level(addressDTO.getLevel())
                 .build();
 
         if(addressDTO.getLatitude() != null && addressDTO.getLongitude() != null) {
@@ -60,12 +59,11 @@ public class AddressService implements BaseService, Message {
     }
 
     public ResponseEntity<Response<?>> get(UUID id) {
-
         Address address = addressRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(
                                 NOT_FOUND_ADDRESS,
-                                Seat.class));
+                                Address.class));
 
         return Response.builder()
                 .message(HttpStatus.OK.getReasonPhrase())
@@ -74,8 +72,15 @@ public class AddressService implements BaseService, Message {
                 .build().makeResponseEntity();
     }
 
-    public ResponseEntity<Response<?>> getAll() {
-        List<Address> all = addressRepository.findAll();
+    public ResponseEntity<Response<?>> getAll(
+            Integer level
+    ) {
+        List<Address> all;
+
+        if(level == null)
+            all = addressRepository.findAll();
+        else
+            all = addressRepository.findAddressesByLevel(level);
 
         if (all.size() == 0)
             return Response.builder()

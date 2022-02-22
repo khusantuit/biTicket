@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonPropertyOrder({"message", "status","data"})
 public class Response<T> {
     @JsonProperty(value = "message")
@@ -25,6 +27,11 @@ public class Response<T> {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty(value = "data")
     private T data;
+
+    public Response(String message, Integer statusCode) {
+        this.message = message;
+        this.statusCode = statusCode;
+    }
 
     public ResponseEntity<Response<?>> makeResponseEntity() {
         return new ResponseEntity<>(this, HttpStatus.valueOf(this.statusCode));

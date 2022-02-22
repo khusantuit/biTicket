@@ -2,6 +2,7 @@ package com.railway.biticket.address;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.railway.biticket.coach.Coach;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -32,7 +33,9 @@ public class Address {
     @Column(name = "name", unique = true)
     private String name;
 
-//    private Integer parentId;
+    @NonNull
+    @Column(name = "level", nullable = false)
+    private Integer level;
 
     @Column(name = "latitude", unique = true)
     private Double latitude;
@@ -43,13 +46,24 @@ public class Address {
 //    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 //    @JoinColumn(name = "parent_id")
 //    private Address address;
-//TODO
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name="parent_id")
     private Address address;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy="address")
-    private List<Address> subordinates = new ArrayList<Address>();
+    @JsonProperty(value = "sub_addresses")
+    private List<Address> subAddresses = new ArrayList<Address>();
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name="child_id")
+    private Address address;
+
+
+    @OneToMany(mappedBy="address")
+    @JsonProperty(value = "sub_addresses")
+    private List<Address> Addresses = new ArrayList<Address>();
 }

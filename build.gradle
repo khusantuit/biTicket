@@ -31,6 +31,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '3.0.0'
 //    testImplementation 'org.springframework.security:spring-security-test'
 }
 

@@ -13,4 +13,5 @@ public class AddressDTO {
     private Double longitude;
     @JsonProperty("parent_id")
     private UUID parentId;
+    private Integer level;
 }

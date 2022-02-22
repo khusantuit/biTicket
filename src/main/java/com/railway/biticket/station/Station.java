@@ -1,6 +1,7 @@
 package com.railway.biticket.station;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.railway.biticket.address.Address;
 import com.railway.biticket.trip.Trip;
 import lombok.*;
@@ -33,8 +34,14 @@ public class Station {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @JoinColumn(name = "region_id")
+    @JsonProperty(value = "region")
+    private Address region;
+
+    @ManyToOne
+    @JoinColumn(name = "district_id")
+    @JsonProperty(value = "district")
+    private Address district;
 
     @Column(name = "latitude", unique = true)
     private Double latitude;

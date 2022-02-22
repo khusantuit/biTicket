@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,8 +19,10 @@ public class AddressController {
     private final AddressService addressService;
 
     @GetMapping("/list")
-    public ResponseEntity<Response<?>> getList() {
-        return addressService.getAll();
+    public ResponseEntity<Response<?>> getList(
+            @RequestParam(required = false) Integer level
+    ) {
+        return addressService.getAll(level);
     }
 
     @GetMapping("/{id}")
@@ -30,22 +33,14 @@ public class AddressController {
     }
 
     @PostMapping
-    public ResponseEntity<Response<?>> add(@RequestBody AddressDTO addressDTO) {
+    public ResponseEntity<Response<?>> add(@RequestBody @Valid AddressDTO addressDTO) {
         return addressService.create(addressDTO);
     }
-
-//    @PutMapping("/{tripId}/station/add/{stationId}")
-//    public ResponseEntity<Response<?>> add(
-//            @PathVariable UUID tripId,
-//            @PathVariable UUID stationId
-//    ) {
-//        return tripService.addStation(tripId, stationId);
-//    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Response<?>> update(
             @PathVariable UUID id,
-            @RequestBody AddressDTO addressDTO
+            @RequestBody @Valid AddressDTO addressDTO
     ) {
         return addressService.updateById(id, addressDTO);
     }
