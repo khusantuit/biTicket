@@ -52,18 +52,8 @@ public class Address {
     @JoinColumn(name="parent_id")
     private Address address;
 
-
     @OneToMany(mappedBy="address")
     @JsonProperty(value = "sub_addresses")
     private List<Address> subAddresses = new ArrayList<Address>();
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-    @JoinColumn(name="child_id")
-    private Address address;
-
-
-    @OneToMany(mappedBy="address")
-    @JsonProperty(value = "sub_addresses")
-    private List<Address> Addresses = new ArrayList<Address>();
 }
