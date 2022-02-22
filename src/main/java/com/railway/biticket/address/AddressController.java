@@ -31,6 +31,7 @@ public class AddressController {
     ) {
         return addressService.get(id);
     }
+
     @PostMapping
     public ResponseEntity<Response<?>> add(@RequestBody @Valid AddressDTO addressDTO) {
         return addressService.create(addressDTO);
