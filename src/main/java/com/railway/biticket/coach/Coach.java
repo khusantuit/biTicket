@@ -1,6 +1,7 @@
 package com.railway.biticket.coach;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.railway.biticket.booking.tripStation.BookingTripStation;
 import com.railway.biticket.seat.Seat;
 import com.railway.biticket.train.Train;
 import lombok.*;
@@ -38,5 +39,9 @@ public class Coach {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "train_id")
     private Train train;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "coach")
+    private List<BookingTripStation> bookingTripStations = new ArrayList<>();
 
 }

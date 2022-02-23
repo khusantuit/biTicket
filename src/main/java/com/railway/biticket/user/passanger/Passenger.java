@@ -1,5 +1,7 @@
 package com.railway.biticket.user.passanger;
 
+import com.railway.biticket.booking.Booking;
+import com.railway.biticket.seat.Seat;
 import com.railway.biticket.user.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +13,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -63,4 +67,7 @@ public class Passenger {
     @NotNull
     @Column(name = "state", nullable = false, columnDefinition = "int default 1")
     private int state;
+
+    @OneToMany(mappedBy = "passenger")
+    private List<Booking> bookings = new ArrayList<>();
 }
