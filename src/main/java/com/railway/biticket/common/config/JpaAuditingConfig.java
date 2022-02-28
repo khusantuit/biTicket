@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.Optional;
 
-@Configuration
-@EnableJpaAuditing(
-        auditorAwareRef = "getUser"
-)
+//@Configuration
+//@EnableJpaAuditing(
+//        auditorAwareRef = "getUser"
+//)
 public class JpaAuditingConfig {
-    public AuditorAware<String> getUser() {
-        return () -> Optional.of("Khusan");
-    }
+//    public AuditorAware<String> getUser() {
+//        return () -> Optional.of("Khusan");
+//    }
 }
