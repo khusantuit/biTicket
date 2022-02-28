@@ -9,9 +9,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 
 @Getter
 @Setter
@@ -33,6 +32,10 @@ public class Station {
     @Column(name = "name")
     private String name;
 
+    @NotNull
+    @Column(name="parent_id")
+    private UUID parentId;
+
     @ManyToOne
     @JoinColumn(name = "region_id")
     @JsonProperty(value = "region")
@@ -52,4 +55,6 @@ public class Station {
     @JsonIgnore
     @ManyToMany(mappedBy = "stations", cascade = CascadeType.ALL)
     private Set<Trip> routes = new HashSet<>();
+
+
 }
