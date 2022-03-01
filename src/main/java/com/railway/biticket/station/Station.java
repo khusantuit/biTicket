@@ -28,11 +28,9 @@ public class Station {
     @Column(name = "id")
     private UUID id;
 
-    @NotBlank
     @Column(name = "name")
     private String name;
 
-    @NotNull
     @Column(name="parent_id")
     private UUID parentId;
 
@@ -55,6 +53,4 @@ public class Station {
     @JsonIgnore
     @ManyToMany(mappedBy = "stations", cascade = CascadeType.ALL)
     private Set<Trip> routes = new HashSet<>();
-
-
 }

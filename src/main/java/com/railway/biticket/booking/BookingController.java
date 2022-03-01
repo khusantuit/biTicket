@@ -2,6 +2,7 @@ package com.railway.biticket.booking;
 
 import com.railway.biticket.common.response.Response;
 import lombok.RequiredArgsConstructor;
+import model.recieve.BookingDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

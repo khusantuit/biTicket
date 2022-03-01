@@ -1,9 +1,8 @@
 package com.railway.biticket.trip;
 
 import com.railway.biticket.common.response.Response;
-import com.railway.biticket.station.StationRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import model.recieve.TripDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +31,6 @@ public class TripController {
         return tripService.create(body);
     }
 
-    @PutMapping("/{tripId}/station/add/{stationId}")
-    public ResponseEntity<Response<?>> add(
-            @PathVariable UUID tripId,
-            @PathVariable UUID stationId
-    ) {
-        return tripService.addStation(tripId, stationId);
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Response<?>> update(

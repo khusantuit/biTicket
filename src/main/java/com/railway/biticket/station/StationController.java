@@ -1,15 +1,11 @@
 package com.railway.biticket.station;
 
-import com.railway.biticket.address.AddressDTO;
 import com.railway.biticket.common.response.Response;
-import com.railway.biticket.trip.TripDTO;
-import com.railway.biticket.trip.TripService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import model.recieve.StationDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -33,6 +29,14 @@ public class StationController {
     @PostMapping
     public ResponseEntity<Response<?>> add(@RequestBody StationDTO stationDTO) {
         return stationService.create(stationDTO);
+    }
+
+    @PutMapping("/{tripId}/station/add/{stationId}")
+    public ResponseEntity<Response<?>> add(
+            @PathVariable UUID tripId,
+            @PathVariable UUID stationId
+    ) {
+        return stationService.addStation(tripId, stationId);
     }
 
     @PutMapping("/{id}")

@@ -28,7 +28,6 @@ public class Coach {
     @Column(name = "id")
     private UUID id;
 
-    @NotBlank
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 

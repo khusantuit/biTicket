@@ -9,6 +9,7 @@ import com.railway.biticket.train.Train;
 import com.railway.biticket.train.TrainDTO;
 import com.railway.biticket.train.TrainRepository;
 import lombok.RequiredArgsConstructor;
+import model.recieve.CoachDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,7 @@ public class CoachService implements BaseService, Message {
            .build();
 
        Coach saved = null;
+
        try {
            saved = coachRepository.save(coach);
        } catch (Exception e) {

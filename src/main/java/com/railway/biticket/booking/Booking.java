@@ -5,16 +5,15 @@ import com.railway.biticket.booking.tripStation.BookingTripStation;
 import com.railway.biticket.coach.Coach;
 import com.railway.biticket.user.passanger.Passenger;
 import lombok.*;
+import model.recieve.BookingStatus;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +25,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "bookings")
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "bookings")
 public class Booking {
     @Id
     @GeneratedValue(generator = "UUID")

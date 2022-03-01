@@ -7,17 +7,24 @@ import com.railway.biticket.common.Message;
 import com.railway.biticket.common.exception.ConflictException;
 import com.railway.biticket.common.exception.NotFoundException;
 import com.railway.biticket.common.response.Response;
+import com.railway.biticket.trip.Trip;
+import com.railway.biticket.trip.TripRepository;
 import lombok.RequiredArgsConstructor;
+import model.recieve.StationDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class StationService implements BaseService, Message {
+    private final TripRepository tripRepository;
     private final StationRepository stationRepository;
     private final AddressRepository addressRepository;
 
@@ -35,15 +42,13 @@ public class StationService implements BaseService, Message {
                     Station.class,
                     "name"
             );
+        Station station = new ModelMapper().map(stationDTO, Station.class);
 
         Address region = addressRepository.findById(stationDTO.getRegionId()).orElseThrow(()-> new NotFoundException(NOT_FOUND_ADDRESS, Address.class));
         Address district = addressRepository.findById(stationDTO.getDistrictId()).orElseThrow(()-> new NotFoundException(NOT_FOUND_ADDRESS, Address.class));
 
-        Station station = Station.builder()
-                .name(stationDTO.getName())
-                .region(region)
-                .district(district)
-                .build();
+        station.setRegion(region);
+        station.setDistrict(district);
 
         Station saved = stationRepository.save(station);
 
@@ -54,8 +59,39 @@ public class StationService implements BaseService, Message {
                 .build().makeResponseEntity();
     }
 
-    public ResponseEntity<Response<?>> get(UUID id) {
 
+    public ResponseEntity<Response<?>> addStation(UUID tripId, UUID stationId) {
+        Optional<Station> station = stationRepository.findById(stationId);
+
+        if(station.isEmpty())
+            return Response.builder()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .message(NOT_FOUND_STATION)
+                    .data(stationId)
+                    .build().makeResponseEntity();
+
+        Optional<Trip> trip = tripRepository.findById(tripId);
+
+        if(trip.isEmpty())
+            return Response.builder()
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .message(NOT_FOUND_TRIP)
+                    .data(stationId)
+                    .build().makeResponseEntity();
+
+        Set<Station> stations = trip.get().getStations();
+        stations.add(station.get());
+        Trip saved = tripRepository.save(trip.get());
+
+        return Response.builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(HttpStatus.OK.getReasonPhrase())
+                .data(saved.getId())
+                .build().makeResponseEntity();
+    }
+
+
+    public ResponseEntity<Response<?>> get(UUID id) {
         Station station = stationRepository.findById(id)
                 .orElseThrow(() ->
                         new NotFoundException(
@@ -105,7 +141,7 @@ public class StationService implements BaseService, Message {
 
         if(!station.getName().equals(stationDTO.getName())) {
             station.setName(stationDTO.getName());
-
+            station.setParentId(station.getParentId());
             stationRepository.save(station);
         }
 

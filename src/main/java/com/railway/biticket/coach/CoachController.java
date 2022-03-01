@@ -2,6 +2,7 @@ package com.railway.biticket.coach;
 
 import com.railway.biticket.common.response.Response;
 import lombok.RequiredArgsConstructor;
+import model.recieve.CoachDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

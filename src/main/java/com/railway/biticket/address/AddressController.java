@@ -1,10 +1,8 @@
 package com.railway.biticket.address;
 
 import com.railway.biticket.common.response.Response;
-import com.railway.biticket.trip.TripDTO;
-import com.railway.biticket.trip.TripService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import model.recieve.AddressDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

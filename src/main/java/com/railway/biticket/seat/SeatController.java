@@ -4,10 +4,12 @@ import com.railway.biticket.common.response.Response;
 import com.railway.biticket.station.Station;
 import com.railway.biticket.station.StationRepository;
 import lombok.RequiredArgsConstructor;
+import model.recieve.SeatDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,13 +34,13 @@ public class SeatController {
     @PutMapping("/{id}")
     public ResponseEntity<Response<?>> update(
             @PathVariable UUID id,
-            @RequestBody SeatDTO seatDTO) {
+            @RequestBody @Valid SeatDTO seatDTO) {
         return seatService.updateById(id, seatDTO);
     }
 
     @PostMapping
     public ResponseEntity<Response<?>> add(
-            @RequestBody SeatDTO seatDTO
+            @RequestBody @Valid SeatDTO seatDTO
     ) {
         return seatService.create(seatDTO);
     }

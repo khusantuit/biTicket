@@ -6,6 +6,7 @@ import com.railway.biticket.common.response.Response;
 import com.railway.biticket.user.passanger.Passenger;
 import com.railway.biticket.user.passanger.PassengerRepository;
 import lombok.RequiredArgsConstructor;
+import model.recieve.BookingDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;

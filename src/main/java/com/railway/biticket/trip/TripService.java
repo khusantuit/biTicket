@@ -7,6 +7,7 @@ import com.railway.biticket.common.response.Response;
 import com.railway.biticket.station.Station;
 import com.railway.biticket.station.StationRepository;
 import lombok.RequiredArgsConstructor;
+import model.recieve.TripDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,36 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TripService implements BaseService, Message {
     private final StationRepository stationRepository;
     private final TripRepository tripRepository;
-
-    public ResponseEntity<Response<?>> addStation(UUID tripId, UUID stationId) {
-        Optional<Station> station = stationRepository.findById(stationId);
-
-        if(station.isEmpty())
-            return Response.builder()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .message(NOT_FOUND_STATION)
-                    .data(stationId)
-                    .build().makeResponseEntity();
-
-        Optional<Trip> trip = tripRepository.findById(tripId);
-
-        if(trip.isEmpty())
-            return Response.builder()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .message(NOT_FOUND_TRIP)
-                    .data(stationId)
-                    .build().makeResponseEntity();
-
-        Set<Station> stations = trip.get().getStations();
-        stations.add(station.get());
-        Trip saved = tripRepository.save(trip.get());
-
-        return Response.builder()
-                .statusCode(HttpStatus.OK.value())
-                .message(HttpStatus.OK.getReasonPhrase())
-                .data(saved.getId())
-                .build().makeResponseEntity();
-    }
 
     public ResponseEntity<Response<?>> create(TripDTO tripDTO) {
         if(isEmpty(tripDTO.getName(), tripDTO.getStations()))

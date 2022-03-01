@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.railway.biticket.booking.tripStation.BookingTripStation;
 import com.railway.biticket.coach.Coach;
 import com.railway.biticket.seat.Seat;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,6 +15,8 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity(name = "trains")
 public class Train {
@@ -28,7 +28,6 @@ public class Train {
     @Column(name = "id")
     private UUID id;
 
-    @NotBlank
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 

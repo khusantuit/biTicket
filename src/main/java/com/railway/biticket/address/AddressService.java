@@ -5,12 +5,14 @@ import com.railway.biticket.common.Message;
 import com.railway.biticket.common.exception.ConflictException;
 import com.railway.biticket.common.exception.NotFoundException;
 import com.railway.biticket.common.response.Response;
-import com.railway.biticket.seat.Seat;
 import lombok.RequiredArgsConstructor;
+import model.recieve.AddressDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @Service
@@ -19,13 +21,6 @@ public class AddressService implements BaseService, Message {
     private final AddressRepository addressRepository;
 
     public ResponseEntity<Response<?>> create(AddressDTO addressDTO) {
-        if(isEmpty(addressDTO.getName()))
-            return Response.builder()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
-                    .message(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                    .data(addressDTO)
-                    .build().makeResponseEntity();
-
         if(addressRepository.existsByName(addressDTO.getName()))
             throw new ConflictException(
                     NAME_CONFLICT_MSG,
@@ -33,10 +28,7 @@ public class AddressService implements BaseService, Message {
                     "name"
             );
 
-        Address address = Address.builder()
-                .name(addressDTO.getName())
-                .level(addressDTO.getLevel())
-                .build();
+        Address address = new ModelMapper().map(addressDTO, Address.class);
 
         if(addressDTO.getLatitude() != null && addressDTO.getLongitude() != null) {
             address.setLatitude(addressDTO.getLatitude());
@@ -46,7 +38,15 @@ public class AddressService implements BaseService, Message {
         if(addressDTO.getParentId() != null) {
             Optional<Address> parentAddress = addressRepository.findById(addressDTO.getParentId());
 
-            parentAddress.ifPresent(address::setAddress);
+            if(parentAddress.isPresent())
+                if(parentAddress.get().getLevel() < address.getLevel())
+                    address.setAddress(parentAddress.get());
+                else
+                    return Response.builder()
+                            .statusCode(HttpStatus.BAD_REQUEST.value())
+                            .message(HttpStatus.BAD_REQUEST.getReasonPhrase() + ". The level of parent address must be greater than current address level.")
+                            .data(addressDTO)
+                            .build().makeResponseEntity();
         }
 
         Address saved = addressRepository.save(address);
@@ -98,8 +98,9 @@ public class AddressService implements BaseService, Message {
 
     public ResponseEntity<Response<?>> updateById(
             UUID id,
-            AddressDTO addressDTO
+            @Valid AddressDTO addressDTO
     ) {
+
         if(isEmpty(addressDTO.getName()))
             return Response.builder()
                     .statusCode(HttpStatus.BAD_REQUEST.value())

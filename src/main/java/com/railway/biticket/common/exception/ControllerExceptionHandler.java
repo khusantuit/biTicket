@@ -14,18 +14,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-//        return super.handleMethodArgumentNotValid(ex, headers, status, request);
-
-//        return Response.builder()
-//                .message(ex.getMessage())
-//                .statusCode(HttpStatus.NOT_FOUND.value())
-//                .build().makeResponseEntity();
-        Response<?> build = Response.builder()
-                .message(ex.getMessage())
-                .statusCode(HttpStatus.BAD_REQUEST.value())
-                .build();
-        return new ResponseEntity<>(new Response<>(ex.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new Response<>("Validation error: " + ex.getMessage(), HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
     }
+
 
     @ExceptionHandler( {NotFoundException.class})
     ResponseEntity<Response<?>> notFoundHandler(Exception e) {

@@ -1,8 +1,7 @@
 package com.railway.biticket.trip;
 
 import com.railway.biticket.station.Station;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,6 +12,9 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity(name = "trips")
 public class Trip {
     @Id
@@ -23,7 +25,6 @@ public class Trip {
     @Column(name = "id")
     private UUID id;
 
-    @NotBlank
     @Column(name = "name", unique = true, nullable = false)
     private String name;
 

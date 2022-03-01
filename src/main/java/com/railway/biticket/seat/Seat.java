@@ -30,7 +30,6 @@ public class Seat {
     @Column(name = "id")
     private UUID id;
 
-    @NotNull
     @JsonProperty(value = "seat_num")
     @Column(name = "seat_num", nullable = false)
     private int seatNum;
@@ -43,6 +42,4 @@ public class Seat {
     @JsonIgnore
     @OneToMany(mappedBy = "seat")
     private List<BookingTripStation> bookingTripStations = new ArrayList<>();
-
-
 }
