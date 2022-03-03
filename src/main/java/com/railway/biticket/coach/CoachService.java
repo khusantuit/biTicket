@@ -6,7 +6,6 @@ import com.railway.biticket.common.exception.ConflictException;
 import com.railway.biticket.common.exception.NotFoundException;
 import com.railway.biticket.common.response.Response;
 import com.railway.biticket.train.Train;
-import com.railway.biticket.train.TrainDTO;
 import com.railway.biticket.train.TrainRepository;
 import lombok.RequiredArgsConstructor;
 import model.recieve.CoachDTO;

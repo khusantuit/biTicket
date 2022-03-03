@@ -7,11 +7,14 @@ import com.railway.biticket.common.response.Response;
 import com.railway.biticket.station.Station;
 import lombok.RequiredArgsConstructor;
 import model.recieve.UserDTO;
+import model.recieve.UserRole;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.RoleNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService implements Message {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     public ResponseEntity<Response<?>> create(UserDTO userDTO) {
         if(userRepository.existsByEmail(userDTO.getEmail()))
@@ -30,6 +34,17 @@ public class UserService implements Message {
             );
         User user = new ModelMapper().map(userDTO, User.class);
 
+        List<Role> list = new ArrayList<>();
+
+        userDTO.getUserRoles().forEach((id) -> {
+            try {
+                list.add(roleRepository.findById(id).orElseThrow(() -> new RoleNotFoundException("Role with id: " + id + " not found")));
+            } catch (RoleNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        user.setRoleEntities(list);
 
         User saved = userRepository.save(user);
 

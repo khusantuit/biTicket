@@ -16,11 +16,11 @@ import java.util.UUID;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/list")
-    public List<User> getList() {
-        return userRepository.findAll();
+    public ResponseEntity<Response<?>> getList() {
+        return userService.getAll();
     }
 
 
@@ -28,12 +28,13 @@ public class UserController {
     public ResponseEntity<Response<?>> get(
             @PathVariable UUID id
     ) {
-        return userRepository.get(id);
+
+        return userService.get(id);
     }
 
     @PostMapping
     public ResponseEntity<Response<?>> add(@RequestBody @Valid UserDTO userDTO) {
-        return userRepository.create(userDTO);
+        return userService.create(userDTO);
     }
 
     @PutMapping("/{id}")
@@ -41,13 +42,13 @@ public class UserController {
             @PathVariable UUID id,
             @RequestBody @Valid UserDTO userDTO
     ) {
-        return userRepository.updateById(id, userDTO);
+        return userService.updateById(id, userDTO);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<?>> delete(
             @PathVariable UUID id
     ) {
-        return userRepository.deleteById(id);
+        return userService.deleteById(id);
     }
 }

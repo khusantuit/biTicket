@@ -9,6 +9,7 @@ import com.railway.biticket.common.exception.ConflictException;
 import com.railway.biticket.seat.Seat;
 import com.railway.biticket.seat.SeatRepository;
 import lombok.RequiredArgsConstructor;
+import model.recieve.TrainDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
